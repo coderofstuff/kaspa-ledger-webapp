@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <!-- <link rel="stylesheet" href="./output.css" /> -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <title>Kaspa Ledger App</title>
+    </head>
+    <body class="w-screen min-h-screen bg-slate-800 text-cyan-400">
+        <!-- Header -->
+        <div
+            class="w-screen md:w-1/2 flex flex-row items-center justify-center mt-10 mx-auto"
+        >
+            <h1 class="text-4xl font-bold">Kaspa Ledger App</h1>
+        </div>
+
+        <!-- Connect -->
+        <div class="w-screen">
+            <img
+                src="./assets/ledger-horizontal.svg"
+                class="bg-slate-400 mx-auto p-10 scale-50"
+                alt=""
+            />
+        </div>
+
+        <!-- Form -->
+        <div class="max-w-4xl mx-auto p-6 space-y-6 text-gray-800">
+            <form
+                id="link-form"
+                class="relative flex flex-col w-full p-10 -mt-20 space-y-10 rounded-lg"
+            >
+                <div
+                    class="border-2 border-yellow-300 rounded-xl p-7 flex flex-col"
+                >
+                    <!-- Form -->
+                    <div
+                        class="text-yellow-300 bg-slate-800 absolute -translate-x-2 -translate-y-10 px-2 font-bold"
+                    >
+                        Get Address
+                    </div>
+
+                    <div class="text-cyan-500 text-lg font-semibold">
+                        Derivation path
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="flex-1 p-3 bg-slate-200 border-2 rounded-lg placeholder-slate-900 focus:outline-none"
+                            placeholder="Derivation path"
+                            id="derivationPath"
+                            value="m/44'/111111'/0'/0/0"
+                            onclick="() => {document.getElementById('derivationPath').value = 'test'}"
+                        />
+
+                        <button
+                            class="bg-slate-500 text-yellow-200 font-bold border-2 rounded-lg p-3 mr-auto hover:bg-slate-600"
+                        >
+                            Generate address from Ledger
+                        </button>
+                    </div>
+
+                    <div class="text-cyan-500 text-lg font-semibold pt-10">
+                        Address
+                    </div>
+
+                    <input
+                        type="text"
+                        class="p-3 bg-slate-200 border-2 rounded-lg placeholder-slate-900 focus:outline-none"
+                        placeholder="Please use the generate button."
+                        id="derivationPath"
+                        value="kaspa:qqkqkzjvr7zwxxmjxjkmxxdwju9kjs6e9u82uh59z07vgaks6gg62v8707g73"
+                        readonly
+                    />
+                    <div class="flex flex-row text-yellow-400">
+                        <span>Balance: </span>
+                        <span class="text-green-400 pl-5"
+                            >+1,293,180.02218843 KAS</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="border-2 border-yellow-300 rounded-xl p-7 flex flex-col"
+                >
+                    <!-- Form -->
+                    <div
+                        class="text-yellow-300 bg-slate-800 absolute -translate-x-2 -translate-y-10 px-2 font-bold"
+                    >
+                        Send transaction
+                    </div>
+
+                    <div class="text-cyan-500 text-lg font-semibold pt-10">
+                      Amount
+                  </div>
+
+                  <input
+                      type="text"
+                      class="p-3 w-72 bg-slate-200 border-2 rounded-lg placeholder-slate-900 focus:outline-none"
+                      placeholder="Please input amount"
+                      id="derivationPath"
+                  />
+
+                  <div class="text-cyan-500 text-lg font-semibold pt-10">
+                    Send to address
+                </div>
+
+                <input
+                    type="text"
+                    class="p-3 bg-slate-200 border-2 rounded-lg placeholder-slate-900 focus:outline-none"
+                    placeholder="Enter a kaspa: address"
+                    id="derivationPath"
+                    readonly
+                />
+                    
+                    >
+                    <button
+                        class="bg-slate-500 text-yellow-300 font-bold border-2 rounded-lg p-3 mr-auto hover:bg-slate-600"
+                    >
+                        Send Transaction via Ledger
+                    </button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
