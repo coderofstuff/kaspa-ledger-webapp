@@ -1,0 +1,43 @@
+{
+  "name": "kaspa-ledger-webapp",
+  "version": "1.0.0",
+  "description": "This is a companion app for the Kaspa-Ledger integration.",
+  "source": "src/webapp.html",
+  "scripts": {
+    "build": "parcel build",
+    "start": "parcel"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lAmeR1/kaspa-ledger-webapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lAmeR1/kaspa-ledger-webapp/issues"
+  },
+  "homepage": "https://github.com/lAmeR1/kaspa-ledger-webapp#readme",
+  "dependencies": {
+    "@kaspa/core-lib": "^1.6.5",
+    "@ledgerhq/hw-transport-webhid": "^6.27.13",
+    "@ledgerhq/logs": "^6.10.1",
+    "axios": "^1.4.0",
+    "core-js": "^3.30.1",
+    "hw-app-kaspa": "github:coderofstuff/hw-app-kaspa"
+  },
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "buffer": "^5.7.1",
+    "crypto-browserify": "^3.12.0",
+    "parcel": "^2.8.3",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "punycode": "^1.4.1",
+    "querystring-es3": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
+  },
+  "alias": {
+    "@ledgerhq/devices": "@ledgerhq/devices/lib-es"
+  }
+}
