@@ -87,6 +87,26 @@ document.generateLedgerAddress = async function() {
     }
 };
 
+document.sendTransaction = async function (signedTx) {
+    const txJson = signedTx.toApiJSON();
+
+    const {data} = await axios.post(`https://api.kaspa.org/transactions`, txJson);
+
+    // Refetch balance, after 2 seconds when the transaction "should" be confirmed:
+    setTimeout(() => {
+        const derivationPath = document.getElementById('DERIVATION_PATH').value;
+        const address = document.state.address;
+        document.fetchAddressDetails(address, derivationPath);
+    }, 2000);
+
+    // Clear fields:
+    document.getElementById("SEND_TO").value = "";
+    document.getElementById("AMOUNT").value = "";
+
+    // Success message:
+    document.getElementById("SEND_RESULT").textContent = data.transactionId || data.error;
+};
+
 document.sendAmount = async function() {
     const $errContainer = document.getElementById("CONTAINER_SIGN_ERROR");
     $errContainer.style.display = 'none';
@@ -171,14 +191,13 @@ document.sendAmount = async function() {
             outputs,
         });
 
-        console.info("---- TXIN");
-        inputs.forEach((i) => console.info())
-
         const kaspa = new Kaspa(await document.getTransport());
         await kaspa.signTransaction(tx);
 
         // For now, just log it:
         console.info(JSON.stringify(tx.toApiJSON(), null, 4));
+
+        await document.sendTransaction(tx);
     } catch (e) {
         $errContainer.style.display = 'block';
         document.getElementById("TEXT_SIGN_ERROR").textContent = String(e.message || e);
