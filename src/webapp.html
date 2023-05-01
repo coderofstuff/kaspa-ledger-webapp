@@ -38,6 +38,24 @@
                 action="#"
             >
                 <div
+                    class="border-2 border-yellow-300 text-yellow-300 rounded-xl p-7 flex flex-col"
+                >
+                    <div
+                        class="text-yellow-300 bg-slate-800 absolute -translate-x-2 -translate-y-10 px-2 font-bold"
+                    >
+                        Device Type
+                    </div>
+                    <label for="DEVICE_TYPE_REAL">
+                        <input type="radio" id="DEVICE_TYPE_REAL" name="deviceType" value="real">
+                        Nano S/S+
+                    </label>
+                    <label for="DEVICE_TYPE_EMULATOR">
+                        <input type="radio" id="DEVICE_TYPE_EMULATOR" name="deviceType" value="emulator" checked>
+                        Speculos Emulator
+                    </label>
+                </div>
+
+                <div
                     class="border-2 border-yellow-300 rounded-xl p-7 flex flex-col"
                 >
                     <!-- Form -->
