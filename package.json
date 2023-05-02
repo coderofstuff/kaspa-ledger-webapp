@@ -19,10 +19,13 @@
   "homepage": "https://github.com/lAmeR1/kaspa-ledger-webapp#readme",
   "dependencies": {
     "@kaspa/core-lib": "^1.6.5",
+    "@ledgerhq/hw-transport-http": "^6.27.13",
     "@ledgerhq/hw-transport-webhid": "^6.27.13",
     "@ledgerhq/logs": "^6.10.1",
     "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
     "core-js": "^3.30.1",
+    "http-proxy-middleware": "^2.0.6",
     "hw-app-kaspa": "github:coderofstuff/hw-app-kaspa"
   },
   "devDependencies": {

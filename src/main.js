@@ -5,6 +5,7 @@ import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import axios from "axios";
 
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+import HttpTransport from "@ledgerhq/hw-transport-http";
 
 document.state = {
     balance: 0,
@@ -21,9 +22,28 @@ document.state = {
  * @returns {TransportWebHID}
  */
 document.getTransport = async function() {
-    if (!document.transport) {
-        document.transport = await TransportWebHID.create();
+    if (document.transportType !== document.forms[0].deviceType.value && document.transport) {
+        // close current transport, and reset it:
+        await document.transport.close();
+
+        document.transport = null;
+        if (document.logListener) {
+            // Unsubscribe then get rid of the instance
+            document.logListener();
+            document.logListener = null;
+        }
     }
+
+    if (!document.transport) {
+        if (document.forms[0].deviceType.value === "emulator") {
+            document.transport = await HttpTransport(`http://${window.location.host}:${window.location.port}`).open(`/api/apdu`);
+        } else {
+            document.transport = await TransportWebHID.create();
+        }
+        document.logListener = listen(log => console.log(log));
+    }
+
+    document.transportType = document.forms[0].deviceType.value;
     
     return document.transport;
 };
@@ -60,8 +80,6 @@ document.generateLedgerAddress = async function() {
     const derivationPath = document.getElementById('DERIVATION_PATH').value;
 
     try {
-        //listen to the events which are sent by the Ledger packages in order to debug the app
-        listen(log => console.log(log));
 
         //When the Ledger device connected it is trying to display the bitcoin address
         const kaspa = new Kaspa(await document.getTransport());
