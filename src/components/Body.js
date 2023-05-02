@@ -45,7 +45,7 @@ const Body = () => (
                             class="flex-1 p-3 bg-slate-200 border-2 rounded-lg placeholder-slate-900 focus:outline-none"
                             placeholder="Derivation path"
                             id="DERIVATION_PATH"
-                            value="44'/111111'/0'/0/0"
+                            defaultValue="44'/111111'/0'/0/0"
                         />
 
                         <button

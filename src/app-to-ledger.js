@@ -81,10 +81,11 @@ export const generateLedgerAddress = async () => {
     try {
 
         //When the Ledger device connected it is trying to display the bitcoin address
-        const kaspa = new Kaspa(await document.getTransport());
+        const kaspa = new Kaspa(await getTransport());
         const { address } = await kaspa.getAddress(derivationPath, false);
 
         const subAdd = address.subarray(1, 66);
+        console.log("SubAdd", subAdd)
         // const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
