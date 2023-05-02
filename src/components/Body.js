@@ -1,41 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+import { generateLedgerAddress, sendAmount } from "../app-to-ledger";
 
-        <!-- <link rel="stylesheet" href="./output.css" /> -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script type="module" src="./main.js"></script>
 
-        <title>Kaspa Ledger App</title>
-    </head>
-    <body class="w-screen min-h-screen bg-slate-800 text-cyan-400">
-        <!-- Header -->
-        <div
-            class="w-screen md:w-1/2 flex flex-row items-center justify-center mt-10 mx-auto"
-        >
-            <h1 class="text-4xl font-bold">Kaspa Ledger App</h1>
-        </div>
-
-        <!-- Connect -->
-        <div class="w-screen">
-            <img
-                src="./assets/ledger-horizontal.svg"
-                class="bg-slate-400 mx-auto p-10 scale-50"
-                alt=""
-            />
-        </div>
-
-        <!-- Form -->
-        <div class="max-w-4xl mx-auto p-6 space-y-6 text-gray-800">
+const Body = () => (
+  <div class="max-w-4xl mx-auto p-6 space-y-6 text-gray-800">
             <form
                 id="link-form"
                 class="relative flex flex-col w-full p-10 -mt-20 space-y-10 rounded-lg"
                 action="#"
+                onSubmit={(e) => {e.preventDefault()}}
             >
                 <div
                     class="border-2 border-yellow-300 text-yellow-300 rounded-xl p-7 flex flex-col"
@@ -46,11 +18,11 @@
                         Device Type
                     </div>
                     <label for="DEVICE_TYPE_REAL">
-                        <input type="radio" id="DEVICE_TYPE_REAL" name="deviceType" value="real">
+                        <input type="radio" id="DEVICE_TYPE_REAL" name="deviceType" value="real" />
                         Nano S/S+
                     </label>
                     <label for="DEVICE_TYPE_EMULATOR">
-                        <input type="radio" id="DEVICE_TYPE_EMULATOR" name="deviceType" value="emulator" checked>
+                        <input type="radio" id="DEVICE_TYPE_EMULATOR" name="deviceType" value="emulator" checked />
                         Speculos Emulator
                     </label>
                 </div>
@@ -58,7 +30,6 @@
                 <div
                     class="border-2 border-yellow-300 rounded-xl p-7 flex flex-col"
                 >
-                    <!-- Form -->
                     <div
                         class="text-yellow-300 bg-slate-800 absolute -translate-x-2 -translate-y-10 px-2 font-bold"
                     >
@@ -78,8 +49,8 @@
                         />
 
                         <button
-                            class="bg-slate-500 text-yellow-200 font-bold border-2 rounded-lg p-3 mr-auto hover:bg-slate-600"
-                            onclick="generateLedgerAddress(); return false;"
+                            class="ml-2 bg-slate-500 text-yellow-200 font-bold border-2 rounded-lg p-3 mr-auto hover:bg-slate-600"
+                            onClick={() => {generateLedgerAddress(); return false;}}
                         >
                             Generate address from Ledger
                         </button>
@@ -102,7 +73,7 @@
                         <span class="text-green-400 pl-5" id="BALANCE">-</span>
                     </div>
 
-                    <div class="flex flex-row text-yellow-400" id="CONTAINER_ADDRESS_ERROR" style="display: none;">
+                    <div class="flex flex-row text-yellow-400" id="CONTAINER_ADDRESS_ERROR" style={{display: "none"}}>
                         <span>Error: </span>
                         <span class="text-red-400 pl-5" id="TEXT_ADDRESS_ERROR"></span>
                     </div>
@@ -111,7 +82,6 @@
                 <div
                     class="border-2 border-yellow-300 rounded-xl p-7 flex flex-col"
                 >
-                    <!-- Form -->
                     <div
                         class="text-yellow-300 bg-slate-800 absolute -translate-x-2 -translate-y-10 px-2 font-bold"
                     >
@@ -142,7 +112,7 @@
                     
                     <button
                         class="bg-slate-500 text-yellow-300 font-bold border-2 rounded-lg p-3 mr-auto hover:bg-slate-600 mt-6"
-                        onclick="sendAmount(); return false;"
+                        onClick={() => {sendAmount(); return false;}}
                     >
                         Send Transaction via Ledger
                     </button>
@@ -152,12 +122,13 @@
                         <span class="text-green-400 pl-5" id="SEND_RESULT">-</span>
                     </div>
 
-                    <div class="flex flex-row text-yellow-400" id="CONTAINER_SIGN_ERROR" style="display: none;">
+                    <div class="flex flex-row text-yellow-400" id="CONTAINER_SIGN_ERROR" style={{display: "none"}}>
                         <span>Error: </span>
                         <span class="text-red-400 pl-5" id="TEXT_SIGN_ERROR"></span>
                     </div>
                 </div>
             </form>
         </div>
-    </body>
-</html>
+);
+
+export default Body;

@@ -1,7 +1,6 @@
 import 'core-js/actual';
 import { listen } from "@ledgerhq/logs";
 import { Kaspa, TransactionInput, TransactionOutput, Transaction } from "hw-app-kaspa";
-import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import axios from "axios";
 
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
@@ -21,7 +20,7 @@ document.state = {
  * 
  * @returns {TransportWebHID}
  */
-document.getTransport = async function() {
+export const getTransport = async () => {
     if (document.transportType !== document.forms[0].deviceType.value && document.transport) {
         // close current transport, and reset it:
         await document.transport.close();
@@ -48,7 +47,7 @@ document.getTransport = async function() {
     return document.transport;
 };
 
-document.fetchAddressDetails = async function(address, derivationPath) {
+export const fetchAddressDetails = async (address, derivationPath) => {
     const {data: balanceData} = await axios.get(`https://api.kaspa.org/addresses/${address}/balance`);
     document.state.balance = balanceData.balance;
     document.getElementById("BALANCE").textContent = `${balanceData.balance / 100000000} KAS`;
@@ -73,7 +72,7 @@ document.fetchAddressDetails = async function(address, derivationPath) {
     console.info(document.state);
 };
 
-document.generateLedgerAddress = async function() {
+export const generateLedgerAddress = async () => {
     document.getElementById("BALANCE").textContent = "-";
     const $errContainer = document.getElementById("CONTAINER_ADDRESS_ERROR");
     $errContainer.style.display = 'none';
@@ -86,7 +85,7 @@ document.generateLedgerAddress = async function() {
         const { address } = await kaspa.getAddress(derivationPath, false);
 
         const subAdd = address.subarray(1, 66);
-        const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
+        // const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
         document.getElementById("KASPA_ADDRESS").value = addr;
@@ -105,7 +104,7 @@ document.generateLedgerAddress = async function() {
     }
 };
 
-document.sendTransaction = async function (signedTx) {
+export const sendTransaction = async (signedTx) => {
     const txJson = signedTx.toApiJSON();
 
     const {data} = await axios.post(`https://api.kaspa.org/transactions`, txJson);
@@ -125,7 +124,7 @@ document.sendTransaction = async function (signedTx) {
     document.getElementById("SEND_RESULT").textContent = data.transactionId || data.error;
 };
 
-document.sendAmount = async function() {
+export const sendAmount = async () => {
     const $errContainer = document.getElementById("CONTAINER_SIGN_ERROR");
     $errContainer.style.display = 'none';
 
