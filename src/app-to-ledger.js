@@ -2,7 +2,7 @@ import 'core-js/actual';
 import { listen } from "@ledgerhq/logs";
 import { Kaspa, TransactionInput, TransactionOutput, Transaction } from "hw-app-kaspa";
 import axios from "axios";
-
+import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import HttpTransport from "@ledgerhq/hw-transport-http";
 
@@ -86,7 +86,7 @@ export const generateLedgerAddress = async () => {
 
         const subAdd = address.subarray(1, 66);
         console.log("SubAdd", subAdd)
-        // const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
+        const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
         document.getElementById("KASPA_ADDRESS").value = addr;
@@ -96,7 +96,7 @@ export const generateLedgerAddress = async () => {
         await kaspa.getAddress(derivationPath, true);
 
         // User approved the address in the device, now we can fetch
-        await document.fetchAddressDetails(addr, derivationPath);
+        await fetchAddressDetails(addr, derivationPath);
     } catch (e) {
         // Catch any error thrown and displays it on the screen
         $errContainer.style.display = 'block';
@@ -114,7 +114,7 @@ export const sendTransaction = async (signedTx) => {
     setTimeout(() => {
         const derivationPath = document.getElementById('DERIVATION_PATH').value;
         const address = document.state.address;
-        document.fetchAddressDetails(address, derivationPath);
+        fetchAddressDetails(address, derivationPath);
     }, 2000);
 
     // Clear fields:
