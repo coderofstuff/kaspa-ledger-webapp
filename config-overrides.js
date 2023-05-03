@@ -9,7 +9,7 @@ module.exports = function override(config) {
    config.resolve.fallback = fallback; 
    config.plugins = (config.plugins || []).concat([ 
    	new NodePolyfillPlugin({
-         excludeAliases: ['console'],
+         excludeAliases: ['console', 'buffer'],
        })
    ]) 
    return config; }
