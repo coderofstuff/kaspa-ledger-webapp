@@ -209,13 +209,13 @@ export const sendAmount = async () => {
             outputs,
         });
 
-        const kaspa = new Kaspa(await document.getTransport());
+        const kaspa = new Kaspa(await getTransport());
         await kaspa.signTransaction(tx);
 
         // For now, just log it:
         console.info(JSON.stringify(tx.toApiJSON(), null, 4));
 
-        await document.sendTransaction(tx);
+        await sendTransaction(tx);
     } catch (e) {
         $errContainer.style.display = 'block';
         document.getElementById("TEXT_SIGN_ERROR").textContent = String(e.message || e);
