@@ -4,7 +4,9 @@ const webpack = require('webpack');
 module.exports = function override(config) { 
 		const fallback = config.resolve.fallback || {}; 
 		Object.assign(fallback, {
-      "fs": false
+      "fs": false,
+      "crypto": false,
+      "path": false
       }) 
    config.resolve.fallback = fallback; 
    // config.plugins = (config.plugins || []).concat([ 
