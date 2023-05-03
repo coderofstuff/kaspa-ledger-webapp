@@ -1,5 +1,5 @@
 const webpack = require('webpack'); 
-// const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 module.exports = function override(config) { 
 		const fallback = config.resolve.fallback || {}; 
@@ -9,9 +9,9 @@ module.exports = function override(config) {
       "path": false
       }) 
    config.resolve.fallback = fallback; 
-   // config.plugins = (config.plugins || []).concat([ 
-   // 	new NodePolyfillPlugin({
-   //       excludeAliases: ['console', 'buffer'],
-   //     })
-   // ]) 
+   config.plugins = (config.plugins || []).concat([ 
+   	new NodePolyfillPlugin({
+         excludeAliases: ['console', 'buffer'],
+       })
+   ]) 
    return config; }
