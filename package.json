@@ -4,8 +4,8 @@
   "description": "This is a companion app for the Kaspa-Ledger integration.",
   "source": "src/webapp.html",
   "scripts": {
-    "build": "react-scripts build",
-    "start": "react-scripts start"
+    "build": "react-app-rewired build",
+    "start": "react-app-rewired start"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "http-proxy-middleware": "^2.0.6",
     "hw-app-kaspa": "github:coderofstuff/hw-app-kaspa",
     "react": "^18.2.0",
+    "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1"
   },
@@ -40,7 +41,7 @@
     "net": false,
     "stream": false,
     "tls": false
-    },
+  },
   "devDependencies": {
     "assert": "^2.0.0",
     "buffer": "^5.7.1",
@@ -51,6 +52,7 @@
     "process": "^0.11.10",
     "punycode": "^1.4.1",
     "querystring-es3": "^0.2.1",
+    "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.5"
   },
