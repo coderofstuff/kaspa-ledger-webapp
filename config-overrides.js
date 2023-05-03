@@ -8,6 +8,8 @@ module.exports = function override(config) {
       }) 
    config.resolve.fallback = fallback; 
    config.plugins = (config.plugins || []).concat([ 
-   	new NodePolyfillPlugin()
+   	new NodePolyfillPlugin({
+         excludeAliases: ['console'],
+       })
    ]) 
    return config; }
