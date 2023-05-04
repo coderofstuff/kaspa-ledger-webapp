@@ -1,8 +1,24 @@
+import { useState } from 'react';
 import { generateLedgerAddress, sendAmount } from "../app-to-ledger";
 
+const Body = () => {
+    const onDeviceTypeChange = (event) => {
+        document.state.deviceType = event.target.value;
+        setDeviceType(event.target.value);
+    };
+    
+    const isLocal = () => {
+        return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    };
+    
+    const isDeviceTypeChecked = (value) => {
+        return deviceType === value;
+    };
+    
+    const [deviceType, setDeviceType] = useState(isLocal() ? 'emulator' : 'real');
 
-const Body = () => (
-  <div class="max-w-4xl mx-auto p-6 space-y-6 text-gray-800">
+    return (
+        <div class="max-w-4xl mx-auto p-6 space-y-6 text-gray-800">
             <form
                 id="link-form"
                 class="relative flex flex-col w-full p-10 -mt-20 space-y-10 rounded-lg"
@@ -18,12 +34,14 @@ const Body = () => (
                         Device Type
                     </div>
                     <label for="DEVICE_TYPE_REAL">
-                        <input type="radio" id="DEVICE_TYPE_REAL" name="deviceType" value="real" />
+                        <input type="radio" id="DEVICE_TYPE_REAL" name="deviceType" value="real"
+                               onChange={onDeviceTypeChange.bind(this)} checked={isDeviceTypeChecked("real")}/>
                         Nano S/S+
                     </label>
                     <label for="DEVICE_TYPE_EMULATOR">
-                        <input type="radio" id="DEVICE_TYPE_EMULATOR" name="deviceType" value="emulator" checked />
-                        Speculos Emulator
+                        <input type="radio" id="DEVICE_TYPE_EMULATOR" name="deviceType" value="emulator"
+                               onChange={onDeviceTypeChange.bind(this)} checked={isDeviceTypeChecked("emulator")} disabled={!isLocal()}/>
+                        Speculos Emulator (localhost only)
                     </label>
                 </div>
 
@@ -129,6 +147,7 @@ const Body = () => (
                 </div>
             </form>
         </div>
-);
+    );
+}
 
 export default Body;
