@@ -6,12 +6,17 @@ import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import HttpTransport from "@ledgerhq/hw-transport-http";
 
+const isLocal = () => {
+    return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+};
+
 document.state = {
     balance: 0,
     utxos: [],
     address: null,
     addressType: 0,
     addressIndex: 0,
+    deviceType: isLocal() ? "emulator" : "real",
 };
 
 /**
