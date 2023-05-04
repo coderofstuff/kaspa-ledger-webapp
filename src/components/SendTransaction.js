@@ -121,11 +121,11 @@ const data = JSON.stringify({
   },
 });
 
-const SendTransaction = () => {
+const SendTransaction = (props) => {
   return (
     <>
       <div
-        id="addressgen"
+        id="sendTX"
         className="bg-slate-800 mx-auto text-white p-10 flex flex-col min-w-[350px]"
       >
         <div className="text-teal-300 text-4xl py-3 mr-auto">
@@ -149,7 +149,11 @@ const SendTransaction = () => {
 
         <button
           className="border-2 border-teal-300 rounded-md bg-slate-600 w-60 p-2 hover:bg-slate-500 active:bg-slate-500/80"
-          onClick={() => {sendAmount(); return false;}}
+          onClick={() => {
+            props.onTxSent && props.onTxSent()
+            // sendAmount(); 
+            
+        }}
         >
           Sign & submit transaction
         </button>

@@ -1,7 +1,7 @@
 const TxSent = () => {
   return (
     <div
-      id="addressgen"
+      id="sentTX"
       className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px]"
     >
       <div className="text-teal-300 text-4xl py-3 ml-auto">
