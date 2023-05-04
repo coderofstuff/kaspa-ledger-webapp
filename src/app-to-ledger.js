@@ -1,9 +1,8 @@
 import 'core-js/actual';
 import { listen } from "@ledgerhq/logs";
 import { Kaspa, TransactionInput, TransactionOutput, Transaction } from "hw-app-kaspa";
-import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import axios from "axios";
-
+import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
 import HttpTransport from "@ledgerhq/hw-transport-http";
 
@@ -21,7 +20,7 @@ document.state = {
  * 
  * @returns {TransportWebHID}
  */
-document.getTransport = async function() {
+export const getTransport = async () => {
     if (document.transportType !== document.forms[0].deviceType.value && document.transport) {
         // close current transport, and reset it:
         await document.transport.close();
@@ -48,7 +47,7 @@ document.getTransport = async function() {
     return document.transport;
 };
 
-document.fetchAddressDetails = async function(address, derivationPath) {
+export const fetchAddressDetails = async (address, derivationPath) => {
     const {data: balanceData} = await axios.get(`https://api.kaspa.org/addresses/${address}/balance`);
     document.state.balance = balanceData.balance;
     document.getElementById("BALANCE").textContent = `${balanceData.balance / 100000000} KAS`;
@@ -73,7 +72,7 @@ document.fetchAddressDetails = async function(address, derivationPath) {
     console.info(document.state);
 };
 
-document.generateLedgerAddress = async function() {
+export const generateLedgerAddress = async () => {
     document.getElementById("BALANCE").textContent = "-";
     const $errContainer = document.getElementById("CONTAINER_ADDRESS_ERROR");
     $errContainer.style.display = 'none';
@@ -82,10 +81,11 @@ document.generateLedgerAddress = async function() {
     try {
 
         //When the Ledger device connected it is trying to display the bitcoin address
-        const kaspa = new Kaspa(await document.getTransport());
+        const kaspa = new Kaspa(await getTransport());
         const { address } = await kaspa.getAddress(derivationPath, false);
 
         const subAdd = address.subarray(1, 66);
+        console.log("SubAdd", subAdd)
         const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
@@ -96,7 +96,7 @@ document.generateLedgerAddress = async function() {
         await kaspa.getAddress(derivationPath, true);
 
         // User approved the address in the device, now we can fetch
-        await document.fetchAddressDetails(addr, derivationPath);
+        await fetchAddressDetails(addr, derivationPath);
     } catch (e) {
         // Catch any error thrown and displays it on the screen
         $errContainer.style.display = 'block';
@@ -105,7 +105,7 @@ document.generateLedgerAddress = async function() {
     }
 };
 
-document.sendTransaction = async function (signedTx) {
+export const sendTransaction = async (signedTx) => {
     const txJson = signedTx.toApiJSON();
 
     const {data} = await axios.post(`https://api.kaspa.org/transactions`, txJson);
@@ -114,7 +114,7 @@ document.sendTransaction = async function (signedTx) {
     setTimeout(() => {
         const derivationPath = document.getElementById('DERIVATION_PATH').value;
         const address = document.state.address;
-        document.fetchAddressDetails(address, derivationPath);
+        fetchAddressDetails(address, derivationPath);
     }, 2000);
 
     // Clear fields:
@@ -125,7 +125,7 @@ document.sendTransaction = async function (signedTx) {
     document.getElementById("SEND_RESULT").textContent = data.transactionId || data.error;
 };
 
-document.sendAmount = async function() {
+export const sendAmount = async () => {
     const $errContainer = document.getElementById("CONTAINER_SIGN_ERROR");
     $errContainer.style.display = 'none';
 
@@ -209,13 +209,13 @@ document.sendAmount = async function() {
             outputs,
         });
 
-        const kaspa = new Kaspa(await document.getTransport());
+        const kaspa = new Kaspa(await getTransport());
         await kaspa.signTransaction(tx);
 
         // For now, just log it:
         console.info(JSON.stringify(tx.toApiJSON(), null, 4));
 
-        await document.sendTransaction(tx);
+        await sendTransaction(tx);
     } catch (e) {
         $errContainer.style.display = 'block';
         document.getElementById("TEXT_SIGN_ERROR").textContent = String(e.message || e);
