@@ -22,7 +22,7 @@ const transportProps = {
  * 
  * @returns {TransportWebHID}
  */
-export const getTransport = async (emulator=True) => {
+export const getTransport = async (emulator=true) => {
         if (emulator) {
             transportProps.transport = await HttpTransport(`http://${window.location.host}:${window.location.port}`).open(`/api/apdu`);
         } else {
@@ -30,6 +30,7 @@ export const getTransport = async (emulator=True) => {
         }
         transportProps.logListener = listen(log => console.log(log));
     
+    console.log(transportProps.transport)
     return transportProps.transport;
 };
 
@@ -60,19 +61,19 @@ export const fetchAddressDetails = async (address, derivationPath) => {
 
 export const generateLedgerAddress = async (derivationPath) => {
     try {
-        console.log("here")
         //When the Ledger device connected it is trying to display the bitcoin address
-        const kaspa = new Kaspa(await getTransport());
-        console.log("here2")
+        const transport = await getTransport();
+        const kaspa = new Kaspa(transport);
         const { address } = await kaspa.getAddress(derivationPath, false);
-        console.log("here3")
         const subAdd = address.subarray(1, 66);
         console.log("SubAdd", subAdd)
         const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
-        return addr
+
+        return addr.toString()
     } catch (e) {
+        console.log("ERROR", e.message || e)
         // setError(e.message || e)
     }
 }
