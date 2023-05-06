@@ -126,12 +126,12 @@ const SendTransaction = (props) => {
     <>
       <div
         id="sendTX"
-        className="bg-slate-800 mx-auto text-white p-10 flex flex-col min-w-[350px]"
+        className="bg-slate-800 mx-auto text-white p-10 flex flex-col min-w-[350px] min-h-[30rem] justify-center items-center"
       >
-        <div className="text-teal-300 text-4xl py-3 mr-auto">
+        <div className="text-teal-300 text-5xl py-3">
           SIGN & SEND TRANSACTION
         </div>
-        <p className="text-white">Here is your unsigned transaction:</p>
+        <p className="text-white">Here is your prepared, unsigned transaction. In this step you are going to sign and submit the transaction to the Kaspa network.</p>
 
         <div className="bg-[#333] rounded-2xl m-5 p-5">
 

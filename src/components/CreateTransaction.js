@@ -1,6 +1,6 @@
 const CreateTransaction = (props) => {
-    return <div id="addressgen" className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px]">
-        <div className="text-teal-300 text-4xl py-3 ml-auto">CREATE TRANSACTION</div>
+    return <div id="addressgen" className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px] min-h-[30rem] justify-center items-center">
+        <div className="text-teal-300 text-5xl py-3">CREATE TRANSACTION</div>
         <p className="text-white">Now you can send a transaction to a receiver. The unsigned TX will be created and signed with the Ledger device.</p>
         
         <div className="flex flex-col items-start justify-start mt-6 space-y-4">

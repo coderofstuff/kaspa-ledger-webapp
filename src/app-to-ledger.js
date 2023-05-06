@@ -10,14 +10,11 @@ const isLocal = () => {
     return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 };
 
-document.state = {
-    balance: 0,
-    utxos: [],
-    address: null,
-    addressType: 0,
-    addressIndex: 0,
-    deviceType: isLocal() ? "emulator" : "real",
-};
+const transportProps = {
+    transport: null,
+    logListener: null
+}
+
 
 /**
  * Initializes the transport to use with Kaspa if it doesn't exist yet.
@@ -25,31 +22,15 @@ document.state = {
  * 
  * @returns {TransportWebHID}
  */
-export const getTransport = async () => {
-    if (document.transportType !== document.forms[0].deviceType.value && document.transport) {
-        // close current transport, and reset it:
-        await document.transport.close();
-
-        document.transport = null;
-        if (document.logListener) {
-            // Unsubscribe then get rid of the instance
-            document.logListener();
-            document.logListener = null;
-        }
-    }
-
-    if (!document.transport) {
-        if (document.forms[0].deviceType.value === "emulator") {
-            document.transport = await HttpTransport(`http://${window.location.host}:${window.location.port}`).open(`/api/apdu`);
+export const getTransport = async (emulator=True) => {
+        if (emulator) {
+            transportProps.transport = await HttpTransport(`http://${window.location.host}:${window.location.port}`).open(`/api/apdu`);
         } else {
-            document.transport = await TransportWebHID.create();
+            transportProps.transport = await TransportWebHID.create();
         }
-        document.logListener = listen(log => console.log(log));
-    }
-
-    document.transportType = document.forms[0].deviceType.value;
+        transportProps.logListener = listen(log => console.log(log));
     
-    return document.transport;
+    return transportProps.transport;
 };
 
 export const fetchAddressDetails = async (address, derivationPath) => {
@@ -75,40 +56,34 @@ export const fetchAddressDetails = async (address, derivationPath) => {
     document.state.address = address;
 
     console.info(document.state);
-};
+}
 
-export const generateLedgerAddress = async () => {
-    document.getElementById("BALANCE").textContent = "-";
-    const $errContainer = document.getElementById("CONTAINER_ADDRESS_ERROR");
-    $errContainer.style.display = 'none';
-    const derivationPath = document.getElementById('DERIVATION_PATH').value;
-
+export const generateLedgerAddress = async (derivationPath) => {
     try {
-
+        console.log("here")
         //When the Ledger device connected it is trying to display the bitcoin address
         const kaspa = new Kaspa(await getTransport());
+        console.log("here2")
         const { address } = await kaspa.getAddress(derivationPath, false);
-
+        console.log("here3")
         const subAdd = address.subarray(1, 66);
         console.log("SubAdd", subAdd)
         const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
 
-        document.getElementById("KASPA_ADDRESS").value = addr;
-        document.getElementById("BALANCE").textContent = "Please confirm the address on the device to fetch balance";
-
-        // Display the address on the Ledger device and ask to verify the address
-        await kaspa.getAddress(derivationPath, true);
-
-        // User approved the address in the device, now we can fetch
-        await fetchAddressDetails(addr, derivationPath);
+        return addr
     } catch (e) {
-        // Catch any error thrown and displays it on the screen
-        $errContainer.style.display = 'block';
-        document.getElementById("TEXT_ADDRESS_ERROR").textContent = String(e.message || e);
-        document.getElementById("BALANCE").textContent = "-";
+        // setError(e.message || e)
     }
-};
+}
+
+export const verifyAddress = async (derivationPath) => {
+    // Display the address on the Ledger device and ask to verify the address
+    console.log(await kaspa.getAddress(derivationPath, true));
+
+    // User approved the address in the device, now we can fetch
+    // await fetchAddressDetails(addr, derivationPath);
+}
 
 export const sendTransaction = async (signedTx) => {
     const txJson = signedTx.toApiJSON();

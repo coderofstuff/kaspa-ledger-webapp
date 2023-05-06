@@ -57,7 +57,7 @@ const Body = () => {
   const [deviceType, setDeviceType] = useState(isLocal() ? "emulator" : "real");
 
   return (
-    <>
+    <div className="text-base">
       <DeviceType onDeviceTypeChanged={deviceTypeChanged} />
       <AddressGenerator onClick={onUseAddressGenerator} />
       <AddressVerifier onVerify={verifyAddress} />
@@ -66,7 +66,7 @@ const Body = () => {
       <SendTransaction onTxSent={txSent} />
       <TxSent />
       <Footer />
-    </>
+    </div>
   );
 };
 

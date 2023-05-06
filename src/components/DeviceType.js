@@ -5,7 +5,7 @@ const DeviceType = (props) => {
 
   return (
     <div className="bg-slate-600 mx-auto p-10 flex flex-col min-w-[350px] py-16">
-      <div className="text-teal-200 text-[3rem] uppercase mx-auto mb-12">
+      <div className="text-teal-300 text-5xl uppercase mx-auto mb-12 font-big">
         Choose your device
       </div>
 

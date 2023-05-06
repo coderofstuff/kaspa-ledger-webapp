@@ -6,9 +6,9 @@ const AddressVerifier = (props) => {
   return (
     <div
       id="addressVerify"
-      className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px]"
+      className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px] min-h-[30rem] justify-center items-center"
     >
-      <div className="text-teal-300 text-4xl py-3 ml-auto">
+      <div className="text-teal-300 text-5xl py-3">
         VERIFY YOUR ADDRESS
       </div>
       <p className="text-white">
