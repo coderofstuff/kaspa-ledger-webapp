@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { generateLedgerAddress, sendAmount } from "../app-to-ledger";
 import DeviceType from "./DeviceType";
 import AddressGenerator from "./AddressGenerator";
 import AddressVerifier from "./AddressVerifier";
@@ -10,7 +9,11 @@ import TxSent from "./TxSent";
 import Footer from "./Footer";
 
 const Body = () => {
+  const [transaction, setTransaction] = useState();
+  const [utxos, setUtxos] = useState([]);
+
   const deviceTypeChanged = (deviceType) => {
+    setDeviceType(deviceType);
     document
       .getElementById("addressgen")
       .scrollIntoView({ behavior: "smooth" });
@@ -18,7 +21,9 @@ const Body = () => {
 
   const onUseAddressGenerator = (e) => {};
 
-  const txCreated = () => {
+  const txCreated = (tx) => {
+    console.info('transaction', tx.toApiJSON());
+    setTransaction(tx);
     document.getElementById("sendTX").scrollIntoView({ behavior: "smooth" });
   };
 
@@ -31,10 +36,6 @@ const Body = () => {
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
     );
-  };
-
-  const isDeviceTypeChecked = (value) => {
-    return deviceType === value;
   };
 
   const newAddressReceived = (dervationPathGui, addr) => {
@@ -64,17 +65,31 @@ const Body = () => {
     <div className="text-base">
       <DeviceType onDeviceTypeChanged={deviceTypeChanged} />
       <AddressGenerator
+        deviceType={deviceType}
         onClick={onUseAddressGenerator}
         onNewAddressGenerated={newAddressReceived}
       />
       <AddressVerifier
+        deviceType={deviceType}
         kaspaAddress={kaspaAddr}
         derivationPath={derivationPath}
         onVerifyDone={handleVerifyDone}
       />
-      <CheckAddress kaspaAddress={kaspaAddr} />
-      <CreateTransaction onCreateTx={txCreated} />
-      <SendTransaction onTxSent={txSent} />
+      <CheckAddress
+        kaspaAddress={kaspaAddr}
+        setUtxos={setUtxos}
+      />
+      <CreateTransaction
+        kaspaAddress={kaspaAddr}
+        derivationPath={derivationPath}
+        utxos={utxos}
+        onCreateTx={txCreated}
+      />
+      <SendTransaction
+        transaction={transaction}
+        deviceType={deviceType}
+        onTxSent={txSent}
+      />
       <TxSent />
       <Footer />
     </div>

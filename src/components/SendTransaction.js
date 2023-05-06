@@ -122,6 +122,7 @@ const data = JSON.stringify({
 });
 
 const SendTransaction = (props) => {
+  const txData = JSON.stringify(props.transaction ? props.transaction.toApiJSON() : {});
   return (
     <>
       <div
@@ -143,7 +144,7 @@ const SendTransaction = (props) => {
           valueStyle="color:#a6e22e;"
           booleanStyle="color:#ac81fe;"
           id="json-pretty"
-          data={data}
+          data={txData}
         ></JSONPretty>
         </div>
 

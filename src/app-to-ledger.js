@@ -13,8 +13,38 @@ const isLocal = () => {
 const transportProps = {
     transport: null,
     logListener: null
+};
+
+/**
+ * 
+ * @param {JSON[]} utxos to use 
+ */
+function selectUtxos(amount, utxosInput) {
+    let fee = 0;
+    let total = 0;
+
+    const selected = [];
+
+    // UTXOs is sorted descending:
+    for (const utxo of utxosInput) {
+        fee += 10000; // Simple assumption
+        total += utxo.amount;
+
+        selected.push(utxo);
+
+        if (total >= amount + fee) {
+            // We have enough
+            break;
+        }
+    }
+
+    // [has_enough, utxos, fee, total]
+    return [total >= amount + fee, selected, fee, total];
 }
 
+function toScriptPublicKey(address) {
+    return Script.fromAddress(new Address(address, "kaspa")).toBuffer().toString("hex");
+}
 
 /**
  * Initializes the transport to use with Kaspa if it doesn't exist yet.
@@ -58,21 +88,17 @@ export const fetchAddressDetails = async (address, derivationPath) => {
     console.info(document.state);
 }
 
-export const generateLedgerAddress = async (derivationPath) => {
-    try {
-        //When the Ledger device connected it is trying to display the bitcoin address
-        const transport = await getTransport();
-        const kaspa = new Kaspa(transport);
-        const { address } = await kaspa.getAddress(derivationPath, false);
-        const subAdd = address.subarray(1, 66);
-        console.log("SubAdd", subAdd)
-        const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
-        const addr = pubkey.toAddress("kaspa");
-        return addr.toString()
-    } catch (e) {
-        console.log("ERROR", e.message || e)
-        // setError(e.message || e)
-    }
+export const generateLedgerAddress = async (derivationPath, deviceType) => {
+    //When the Ledger device connected it is trying to display the bitcoin address
+    const isEmulator = deviceType === 2;
+    const transport = await getTransport(isEmulator);
+    const kaspa = new Kaspa(transport);
+    const { address } = await kaspa.getAddress(derivationPath, false);
+    const subAdd = address.subarray(1, 66);
+    console.log("SubAdd", subAdd)
+    const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
+    const addr = pubkey.toAddress("kaspa");
+    return addr.toString();
 }
 
 export const verifyAddress = async (derivationPath, verify) => {
@@ -116,99 +142,68 @@ export const sendTransaction = async (signedTx) => {
     document.getElementById("SEND_RESULT").textContent = data.transactionId || data.error;
 };
 
-export const sendAmount = async () => {
-    const $errContainer = document.getElementById("CONTAINER_SIGN_ERROR");
-    $errContainer.style.display = 'none';
+export const createTransaction = (amount, sendTo, utxosInput, derivationPath, address) => {
+    console.info("Amount:", amount);
+    console.info("Send to:", sendTo);
+    console.info("UTXOs:", utxosInput);
+    console.info("Derivation Path:", derivationPath);
 
-    /**
-     * 
-     * @param {JSON[]} utxos to use 
-     */
-    function selectUtxos(amount) {
-        let fee = 0;
-        let total = 0;
+    const [hasEnough, utxos, fee, totalUtxoAmount] = selectUtxos(amount, utxosInput);
 
-        const selected = [];
+    console.info("hasEnough", hasEnough);
+    console.info(utxos);
 
-        // UTXOs is sorted descending:
-        for (const utxo of document.state.utxos) {
-            fee += 10000; // Simple assumption
-            total += utxo.amount;
-
-            selected.push(utxo);
-
-            if (total >= amount + fee) {
-                // We have enough
-                break;
-            }
-        }
-
-        // [has_enough, utxos, fee, total]
-        return [total >= amount + fee, selected, fee, total];
+    if (!hasEnough) {
+        // Show error we don't have enough KAS
+        return;
     }
 
-    function toScriptPublicKey(address) {
-        return Script.fromAddress(new Address(address, "kaspa")).toBuffer().toString("hex");
-    }
+    const path = derivationPath.split('/');
+    console.info('Split Path:', path);
 
-    try {
-        const amount = Number(document.getElementById("AMOUNT").value) * 100000000;
-        const sendTo = document.getElementById("SEND_TO").value;
-        console.info("Amount:", amount);
-        console.info("Send to:", sendTo);
+    const inputs = utxos.map((utxo) => new TransactionInput({
+        value: utxo.amount,
+        prevTxId: utxo.prevTxId,
+        outpointIndex: utxo.outpointIndex,
+        addressType: Number(path[3]),
+        addressIndex: Number(path[4]),
+    }));
 
-        const [hasEnough, utxos, fee, totalUtxoAmount] = selectUtxos(amount);
+    const outputs = [];
 
-        console.info("hasEnough", hasEnough);
-        console.info(utxos);
+    const sendToOutput = new TransactionOutput({
+        value: amount,
+        scriptPublicKey: toScriptPublicKey(sendTo),
+    });
 
-        if (!hasEnough) {
-            // Show error we don't have enough KAS
-            return;
-        }
+    outputs.push(sendToOutput);
 
-        const inputs = utxos.map((utxo) => new TransactionInput({
-            value: utxo.amount,
-            prevTxId: utxo.prevTxId,
-            outpointIndex: utxo.outpointIndex,
-            addressType: document.state.addressType,
-            addressIndex: document.state.addressIndex,
+    const changeAmount = totalUtxoAmount - amount - fee;
+
+    if (changeAmount > 0) {
+        // Send remainder back to self:
+        outputs.push(new TransactionOutput({
+            value: changeAmount,
+            scriptPublicKey: toScriptPublicKey(address),
         }));
-
-        const outputs = [];
-
-        const sendToOutput = new TransactionOutput({
-            value: amount,
-            scriptPublicKey: toScriptPublicKey(sendTo),
-        });
-
-        outputs.push(sendToOutput);
-
-        const changeAmount = totalUtxoAmount - amount - fee;
-
-        if (changeAmount > 0) {
-            // Send remainder back to self:
-            outputs.push(new TransactionOutput({
-                value: changeAmount,
-                scriptPublicKey: toScriptPublicKey(document.state.address),
-            }));
-        }
-
-        const tx = new Transaction({
-            version: 0,
-            inputs,
-            outputs,
-        });
-
-        const kaspa = new Kaspa(await getTransport());
-        await kaspa.signTransaction(tx);
-
-        // For now, just log it:
-        console.info(JSON.stringify(tx.toApiJSON(), null, 4));
-
-        await sendTransaction(tx);
-    } catch (e) {
-        $errContainer.style.display = 'block';
-        document.getElementById("TEXT_SIGN_ERROR").textContent = String(e.message || e);
     }
+
+    const tx = new Transaction({
+        version: 0,
+        inputs,
+        outputs,
+    });
+
+    return tx;
+};
+
+export const sendAmount = async (tx, deviceType) => {
+    const isEmulator = deviceType === 2;
+    const kaspa = new Kaspa(await getTransport(isEmulator));
+    await kaspa.signTransaction(tx);
+
+    // For now, just log it:
+    console.info(JSON.stringify(tx.toApiJSON(), null, 4));
+
+    await sendTransaction(tx);
 };

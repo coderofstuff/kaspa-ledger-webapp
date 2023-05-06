@@ -8,7 +8,7 @@ const AddressGenerator = (props) => {
     setLoading(true);
     const derivationPath = e.target.derivationPath.value;
 
-    generateLedgerAddress(derivationPath)
+    generateLedgerAddress(derivationPath, props.deviceType)
       .then((addr) => {
         props.onNewAddressGenerated &&
           props.onNewAddressGenerated(derivationPath, addr);
