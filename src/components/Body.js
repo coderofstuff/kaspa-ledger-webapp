@@ -72,7 +72,7 @@ const Body = () => {
       kaspaAddress={kaspaAddr}
       derivationPath={derivationPath}
       />
-      <CheckAddress />
+      <CheckAddress kaspaAddress={kaspaAddr} />
       <CreateTransaction onCreateTx={txCreated} />
       <SendTransaction onTxSent={txSent} />
       <TxSent />
