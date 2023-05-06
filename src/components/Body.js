@@ -16,29 +16,15 @@ const Body = () => {
       .scrollIntoView({ behavior: "smooth" });
   };
 
-  const onUseAddressGenerator = (e) => {
-   
-  };
-
-  const verifyAddress = (e) => {
-    setTimeout(() => {
-      document
-        .getElementById("checkAddress")
-        .scrollIntoView({ behavior: "smooth" });
-    }, 1000);
-  };
+  const onUseAddressGenerator = (e) => {};
 
   const txCreated = () => {
-    document
-      .getElementById("sendTX")
-      .scrollIntoView({ behavior: "smooth" });
-  }
+    document.getElementById("sendTX").scrollIntoView({ behavior: "smooth" });
+  };
 
   const txSent = () => {
-    document
-    .getElementById("sentTX")
-    .scrollIntoView({ behavior: "smooth" });
-  }
+    document.getElementById("sentTX").scrollIntoView({ behavior: "smooth" });
+  };
 
   const isLocal = () => {
     return (
@@ -52,12 +38,23 @@ const Body = () => {
   };
 
   const newAddressReceived = (dervationPathGui, addr) => {
-    setDerivationPath(dervationPathGui)
-    setKaspaAddr(addr)
+    setDerivationPath(dervationPathGui);
+    setKaspaAddr(addr);
     document
-    .getElementById("addressVerify")
-    .scrollIntoView({ behavior: "smooth" });
-  }
+      .getElementById("addressVerify")
+      .scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleVerifyDone = (result) => {
+    if (result) {
+      console.log("here")
+      setTimeout(() => {
+        document
+          .getElementById("checkAddress")
+          .scrollIntoView({ behavior: "smooth" });
+      }, 1000);
+    }
+  };
 
   const [deviceType, setDeviceType] = useState(isLocal() ? "emulator" : "real");
   const [kaspaAddr, setKaspaAddr] = useState();
@@ -66,10 +63,14 @@ const Body = () => {
   return (
     <div className="text-base">
       <DeviceType onDeviceTypeChanged={deviceTypeChanged} />
-      <AddressGenerator onClick={onUseAddressGenerator} onNewAddressGenerated={newAddressReceived} />
-      <AddressVerifier onVerify={verifyAddress}
-      kaspaAddress={kaspaAddr}
-      derivationPath={derivationPath}
+      <AddressGenerator
+        onClick={onUseAddressGenerator}
+        onNewAddressGenerated={newAddressReceived}
+      />
+      <AddressVerifier
+        kaspaAddress={kaspaAddr}
+        derivationPath={derivationPath}
+        onVerifyDone={handleVerifyDone}
       />
       <CheckAddress kaspaAddress={kaspaAddr} />
       <CreateTransaction onCreateTx={txCreated} />
