@@ -11,6 +11,7 @@ import Footer from "./Footer";
 const Body = () => {
   const [transaction, setTransaction] = useState();
   const [utxos, setUtxos] = useState([]);
+  const [txId, setTxId] = useState("");
 
   const deviceTypeChanged = (deviceType) => {
     setDeviceType(deviceType);
@@ -27,7 +28,8 @@ const Body = () => {
     document.getElementById("sendTX").scrollIntoView({ behavior: "smooth" });
   };
 
-  const txSent = () => {
+  const txSent = (txId) => {
+    setTxId(txId);
     document.getElementById("sentTX").scrollIntoView({ behavior: "smooth" });
   };
 
@@ -90,7 +92,7 @@ const Body = () => {
         deviceType={deviceType}
         onTxSent={txSent}
       />
-      <TxSent />
+      <TxSent txId={txId}/>
       <Footer />
     </div>
   );

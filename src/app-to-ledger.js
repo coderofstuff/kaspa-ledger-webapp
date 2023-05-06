@@ -127,19 +127,7 @@ export const sendTransaction = async (signedTx) => {
 
     const {data} = await axios.post(`https://api.kaspa.org/transactions`, txJson);
 
-    // Refetch balance, after 2 seconds when the transaction "should" be confirmed:
-    setTimeout(() => {
-        const derivationPath = document.getElementById('DERIVATION_PATH').value;
-        const address = document.state.address;
-        fetchAddressDetails(address, derivationPath);
-    }, 2000);
-
-    // Clear fields:
-    document.getElementById("SEND_TO").value = "";
-    document.getElementById("AMOUNT").value = "";
-
-    // Success message:
-    document.getElementById("SEND_RESULT").textContent = data.transactionId || data.error;
+    return data.transactionId;
 };
 
 export const createTransaction = (amount, sendTo, utxosInput, derivationPath, address) => {
@@ -199,11 +187,12 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
 
 export const sendAmount = async (tx, deviceType) => {
     const isEmulator = deviceType === 2;
-    const kaspa = new Kaspa(await getTransport(isEmulator));
+    const transport = await getTransport(isEmulator)
+    const kaspa = new Kaspa(transport);
     await kaspa.signTransaction(tx);
 
     // For now, just log it:
     console.info(JSON.stringify(tx.toApiJSON(), null, 4));
 
-    await sendTransaction(tx);
+    return await sendTransaction(tx);
 };
