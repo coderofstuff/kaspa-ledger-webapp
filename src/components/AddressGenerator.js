@@ -1,13 +1,25 @@
+import { useState } from "react";
 import { generateLedgerAddress } from "../app-to-ledger";
 
 const AddressGenerator = (props) => {
+  const [loading, setLoading] = useState(true);
+
   const submitDerivationPath = (e) => {
+    setLoading(true);
     const derivationPath = e.target.derivationPath.value;
-    const address = generateLedgerAddress(derivationPath);
 
-    console.log("got new addr", address)
-    props.onClick && props.onClick(e);
+    generateLedgerAddress(derivationPath)
+      .then((addr) => {
+        props.onNewAddressGenerated &&
+          props.onNewAddressGenerated(derivationPath, addr);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("Error", e);
+        setLoading(false);
+      });
 
+    props.onClick && props.onClick();
     e.preventDefault();
   };
 
@@ -21,9 +33,7 @@ const AddressGenerator = (props) => {
         This is an HDWallet working with the BIP39 standard. To generate an
         address you need a derivation path.
       </p>
-      <form
-        onSubmit={submitDerivationPath}
-      >
+      <form onSubmit={submitDerivationPath}>
         <div className="flex flex-row items-start justify-start mt-6">
           <input
             type="text"
@@ -36,8 +46,9 @@ const AddressGenerator = (props) => {
           />
           <button
             type="submit"
-            class="border-2 rounded rounded-md h-14 border-teal-300 bg-slate-600 text-xs ml-4 p-2 hover:bg-slate-500"
+            class="flex flex-row  justify-center items-center border-2 rounded rounded-md h-14 border-teal-300 bg-slate-600 text-xs ml-4 p-2 hover:bg-slate-500"
           >
+            {loading && <img className="w-8 h-8 mr-2 text-teal-300 animate-spin" src="assets/spinner.svg" / >}
             Get address
           </button>
         </div>

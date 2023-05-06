@@ -17,9 +17,7 @@ const Body = () => {
   };
 
   const onUseAddressGenerator = (e) => {
-    document
-      .getElementById("addressVerify")
-      .scrollIntoView({ behavior: "smooth" });
+   
   };
 
   const verifyAddress = (e) => {
@@ -54,13 +52,26 @@ const Body = () => {
     return deviceType === value;
   };
 
+  const newAddressReceived = (dervationPathGui, addr) => {
+    setDerivationPath(dervationPathGui)
+    setKaspaAddr(addr)
+    document
+    .getElementById("addressVerify")
+    .scrollIntoView({ behavior: "smooth" });
+  }
+
   const [deviceType, setDeviceType] = useState(isLocal() ? "emulator" : "real");
+  const [kaspaAddr, setKaspaAddr] = useState();
+  const [derivationPath, setDerivationPath] = useState();
 
   return (
     <div className="text-base">
       <DeviceType onDeviceTypeChanged={deviceTypeChanged} />
-      <AddressGenerator onClick={onUseAddressGenerator} />
-      <AddressVerifier onVerify={verifyAddress} />
+      <AddressGenerator onClick={onUseAddressGenerator} onNewAddressGenerated={newAddressReceived} />
+      <AddressVerifier onVerify={verifyAddress}
+      kaspaAddress={kaspaAddr}
+      derivationPath={derivationPath}
+      />
       <CheckAddress />
       <CreateTransaction onCreateTx={txCreated} />
       <SendTransaction onTxSent={txSent} />

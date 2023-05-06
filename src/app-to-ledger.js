@@ -69,8 +69,6 @@ export const generateLedgerAddress = async (derivationPath) => {
         console.log("SubAdd", subAdd)
         const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
         const addr = pubkey.toAddress("kaspa");
-
-
         return addr.toString()
     } catch (e) {
         console.log("ERROR", e.message || e)

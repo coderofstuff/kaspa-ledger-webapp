@@ -12,10 +12,12 @@ const AddressVerifier = (props) => {
         VERIFY YOUR ADDRESS
       </div>
       <p className="text-white">
-        Your address for{" "}
-        <span className="text-teal-300">44'/111111'/0'/0/0</span> is:
+        Your address for
+        <span className="text-teal-300 font-mono"> {props.derivationPath}</span> is:
       </p>
-      <div className="text-teal-300 font-bold p-4">kaspa:q123123123123</div>
+      <div className="text-teal-300 font-mono p-4">
+        <a href={`https://explorer.kaspa.org/addresses/${props.kaspaAddress}`} target="_blank">{props.kaspaAddress}</a>
+        </div>
       <p className="text-white">
         Your address needs to be verified with the Ledger now.
       </p>
