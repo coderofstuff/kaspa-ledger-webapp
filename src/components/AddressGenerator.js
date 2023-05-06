@@ -2,7 +2,7 @@ import { useState } from "react";
 import { generateLedgerAddress } from "../app-to-ledger";
 
 const AddressGenerator = (props) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const submitDerivationPath = (e) => {
     setLoading(true);

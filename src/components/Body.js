@@ -29,7 +29,6 @@ const Body = () => {
   };
 
   const txCreated = () => {
-    console.log("Test")
     document
       .getElementById("sendTX")
       .scrollIntoView({ behavior: "smooth" });

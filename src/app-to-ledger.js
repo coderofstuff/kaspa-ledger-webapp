@@ -30,7 +30,6 @@ export const getTransport = async (emulator=true) => {
         }
         transportProps.logListener = listen(log => console.log(log));
     
-    console.log(transportProps.transport)
     return transportProps.transport;
 };
 
@@ -76,12 +75,25 @@ export const generateLedgerAddress = async (derivationPath) => {
     }
 }
 
-export const verifyAddress = async (derivationPath) => {
+export const verifyAddress = async (derivationPath, verify) => {
+    const transport = await getTransport();
+    const kaspa = new Kaspa(transport);
     // Display the address on the Ledger device and ask to verify the address
-    console.log(await kaspa.getAddress(derivationPath, true));
+    console.log("Verifying address for", derivationPath)
 
-    // User approved the address in the device, now we can fetch
-    // await fetchAddressDetails(addr, derivationPath);
+    return await kaspa.getAddress(derivationPath, true).then(
+        (address) => {
+            console.log("Received address from Ledger device")
+            return true
+        }
+    ).catch(
+        (err) => {
+            // Error received (e.g. "TransportStatusError")
+            // Verification failed.
+            console.log("Error received.")
+            return false
+        }
+    )
 }
 
 export const sendTransaction = async (signedTx) => {

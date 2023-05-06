@@ -1,7 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { verifyAddress } from "../app-to-ledger";
 
 const AddressVerifier = (props) => {
   const [verificationState, setVerificationState] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // kaspa address changed - reset state
+    setVerificationState(false)
+  }, [props.kaspaAddress])
+
+  const verifyNow = async () => {
+    setVerificationState(false)
+    props.onVerifyStart && props.onVerifyStart()
+
+    verifyAddress(props.derivationPath).then(
+      result => {
+        setVerificationState(result)
+      }
+    )
+    props.onVerifyDone && props.onVerifyDone(result)
+  }
 
   return (
     <div
@@ -23,12 +42,10 @@ const AddressVerifier = (props) => {
       </p>
       <div className="flex flex-row items-start justify-start mt-6">
         <button
-          className="border-2 border-teal-300 bg-slate-600 text-xl border-2 rounded-md ml-4 p-2 hover:bg-slate-500"
-          onClick={() => {
-            setVerificationState(true);
-            props.onVerify && props.onVerify()
-          }}
+          className="flex flex-row flex-nowrap border-2 border-teal-300 bg-slate-600 text-xl border-2 rounded-md ml-4 p-2 hover:bg-slate-500"
+          onClick={verifyNow}
         >
+          {loading && <img className="w-8 h-8 mr-2 text-teal-300 animate-spin" src="assets/spinner.svg" / >}
           Verify address now!
         </button>
       </div>

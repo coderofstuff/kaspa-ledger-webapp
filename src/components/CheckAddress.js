@@ -15,7 +15,7 @@ const CheckAddress = (props) => {
 
       // set utxo count
       getAddressUtxos(props.kaspaAddress)
-        .then((v) => {console.log("Fetched UTXOs", v); setUtxoCount(v.length)})
+        .then((v) => {setUtxoCount(v.length)})
         .catch((err) => console.log("error", err));
     };
 
