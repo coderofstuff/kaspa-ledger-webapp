@@ -34,6 +34,7 @@ const CreateTransaction = (props) => {
       );
       props.onCreateTx && !!tx && props.onCreateTx(tx);
     } catch (err) {
+      setAmountError(true);
       setError("Amount too high.");
     }
   };
