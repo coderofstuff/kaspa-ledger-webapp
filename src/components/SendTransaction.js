@@ -1,8 +1,15 @@
 import JSONPretty from "react-json-pretty";
 import { sendAmount } from "../app-to-ledger";
+import { useState } from "react";
 
 const SendTransaction = (props) => {
-  const txData = JSON.stringify(props.transaction ? props.transaction.toApiJSON() : {});
+  const [loading, setLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState();
+
+  const txData = JSON.stringify(
+    props.transaction ? props.transaction.toApiJSON() : {}
+  );
+
   return (
     <>
       <div
@@ -12,31 +19,57 @@ const SendTransaction = (props) => {
         <div className="text-teal-300 text-5xl py-3">
           SIGN & SEND TRANSACTION
         </div>
-        <p className="text-white">Here is your prepared, unsigned transaction. In this step you are going to sign and submit the transaction to the Kaspa network.</p>
+        <p className="text-white">
+          Here is your prepared, unsigned transaction. In this step you are
+          going to sign and submit the transaction to the Kaspa network.
+        </p>
 
         <div className="bg-[#333] rounded-2xl m-5 p-5">
-
-        <JSONPretty
-          mainStyle="line-height:1.3;color:#fff;background:#333;overflow:auto;"
-          errorStyle="line-height:1.3;color:#66d9ef;background:#272822;overflow:auto;"
-          keyStyle="color:rgb(94 234 212);"
-          stringStyle="color:#fd971f;"
-          valueStyle="color:#a6e22e;"
-          booleanStyle="color:#ac81fe;"
-          id="json-pretty"
-          data={txData}
-        ></JSONPretty>
+          <JSONPretty
+            mainStyle="line-height:1.3;color:#fff;background:#333;overflow:auto;"
+            errorStyle="line-height:1.3;color:#66d9ef;background:#272822;overflow:auto;"
+            keyStyle="color:rgb(94 234 212);"
+            stringStyle="color:#fd971f;"
+            valueStyle="color:#a6e22e;"
+            booleanStyle="color:#ac81fe;"
+            id="json-pretty"
+            data={txData}
+          ></JSONPretty>
         </div>
 
         <button
-          className="border-2 border-teal-300 rounded-md bg-slate-600 w-60 p-2 hover:bg-slate-500 active:bg-slate-500/80"
+          className="border-2 border-teal-300 rounded-md bg-slate-600 flex flex-row justify-center items-center p-2 hover:bg-slate-500 active:bg-slate-500/80"
           onClick={async () => {
-            const txId = await sendAmount(props.transaction, props.deviceType);
-            props.onTxSent && props.onTxSent(txId);
-        }}
+            setLoading(true);
+            sendAmount(props.transaction, props.deviceType)
+              .then((txId) => {
+                setLoading(false);
+                props.onTxSent && props.onTxSent(txId);
+                setShowMessage(<span className="text-green-300">Transaction sent succesfully.</span>);
+              })
+              .catch((err) => {
+                setLoading(false);
+                console.log("Error submitting TX", err);
+                setShowMessage(<span className="text-red-400">Transaction declined. Review not accepted or the TX got already sent to the network.</span>);
+              });
+          }}
         >
+          {!!loading && (
+            <img
+              className="w-12 h-12 m-2 text-teal-300 animate-spin"
+              src="assets/spinner.svg"
+            />
+          )}
           Sign & submit transaction
         </button>
+        {loading && (
+          <p className="text-orange-400 text-2xl">
+            Now please check your Ledger device and verify the address.
+          </p>
+        )}
+        {!!showMessage && (
+          <div className="mt-4">{showMessage}</div>
+        )}
       </div>
     </>
   );
