@@ -46,7 +46,7 @@ const AddressGenerator = (props) => {
           />
           <button
             type="submit"
-            class="flex flex-row  justify-center items-center border-2 rounded rounded-md h-14 border-teal-300 bg-slate-600 text-xs ml-4 p-2 hover:bg-slate-500"
+            className="flex flex-row  justify-center items-center border-2 rounded rounded-md h-14 border-teal-300 bg-slate-600 text-xs ml-4 p-2 hover:bg-slate-500"
           >
             {loading && <img className="w-8 h-8 mr-2 text-teal-300 animate-spin" src="assets/spinner.svg" / >}
             Get address

@@ -18,21 +18,24 @@ const CheckAddress = (props) => {
       getAddressUtxos(props.kaspaAddress)
         .then((utxos) => {
           setUtxoCount(utxos.length);
-          props.setUtxos && props.setUtxos((utxos || []).map((utxo) => {
-            console.info('utxo', utxo);
-            return {
-              amount: Number(utxo.utxoEntry.amount),
-              prevTxId: utxo.outpoint.transactionId,
-              outpointIndex: utxo.outpoint.index,
-            };
-          }));
+          props.setUtxos &&
+            props.setUtxos(
+              (utxos || []).map((utxo) => {
+                console.info("utxo", utxo);
+                return {
+                  amount: Number(utxo.utxoEntry.amount),
+                  prevTxId: utxo.outpoint.transactionId,
+                  outpointIndex: utxo.outpoint.index,
+                };
+              })
+            );
         })
         .catch((err) => console.log("error", err));
     };
 
-
-    updateData();
-
+    if (!!props.kaspaAddress) {
+      updateData();
+    }
   }, [props.kaspaAddress]);
 
   return (
@@ -41,31 +44,38 @@ const CheckAddress = (props) => {
       id="checkAddress"
     >
       <div className="text-5xl text-teal-300">ADDRESS OVERVIEW</div>
-{!!props.kaspaAddress ? <>
-      <p className="mb-9">
-        You now have a kaspa address with the following values:
-      </p>
+      {!!props.kaspaAddress ? (
+        <>
+          <p className="mb-9">
+            You now have a kaspa address with the following values:
+          </p>
 
-      <div className="flex flex-col">
-        <div className="flex flex-row">
-          <div className="w-32">Address:</div>
-          <div className="text-teal-400 text-sm font-mono flex flex-row justify-center items-center">
-            <a href={`https://explorer.kaspa.org/addresses/${props.kaspaAddress}`} target="_blank">
-            {props.kaspaAddress}
-            </a>
-            <CopyButton text={props.kaspaAddress} />
+          <div className="flex flex-col">
+            <div className="flex flex-row">
+              <div className="w-32">Address:</div>
+              <div className="text-teal-400 text-sm font-mono flex flex-row justify-center items-center">
+                <a
+                  href={`https://explorer.kaspa.org/addresses/${props.kaspaAddress}`}
+                  target="_blank"
+                >
+                  {props.kaspaAddress}
+                </a>
+                <CopyButton text={props.kaspaAddress} />
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-32">Balance:</div>
+              <div className="text-green-600">{balance} KAS</div>
+            </div>
+            <div className="flex flex-row">
+              <div className="w-32">UTXO count:</div>
+              <div className="text-green-600">{utxoCount}</div>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-row">
-          <div className="w-32">Balance:</div>
-          <div className="text-green-600">{balance} KAS</div>
-        </div>
-        <div className="flex flex-row">
-          <div className="w-32">UTXO count:</div>
-          <div className="text-green-600">{utxoCount}</div>
-        </div>
-      </div>
-      </> : <p className="text-white text-xl">No address generated yet.</p>}
+        </>
+      ) : (
+        <p className="text-white text-xl">No address generated yet.</p>
+      )}
     </div>
   );
 };

@@ -9,6 +9,7 @@ const TxSent = (props) => {
       <div className="flex flex-row justify-center items-center text-teal-300 text-5xl py-3">
         TRANSACTION OVERVIEW {!!props.txId && <BsCheckCircleFill className="ml-5 text-lime-400" />}
       </div>
+      {!!props.txId ? <>
       <p className="text-white">
         Your transaction now has been submitted to the Kaspa network. Check the
         explorer for the transaction ID:
@@ -22,7 +23,8 @@ const TxSent = (props) => {
       <p className="text-white">
         Thank you for testing the brand new Kaspa Ledger Integration!
       </p>
-      <p>There is no transaction submitted yet. Please create, sign and submit a TX to see a result here.</p>
+      </> : <p>There is no transaction submitted yet. Please create, sign and submit a TX to see a result here.</p>}
+      
     </div>
   );
 };

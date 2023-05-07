@@ -34,10 +34,12 @@ const Body = () => {
   };
 
   const isLocal = () => {
-    return (
+    const local = (
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
-    );
+    )
+    console.log(local)
+    return local;
   };
 
   const newAddressReceived = (dervationPathGui, addr) => {
@@ -59,13 +61,13 @@ const Body = () => {
     }
   };
 
-  const [deviceType, setDeviceType] = useState(isLocal() ? "emulator" : "real");
+  const [deviceType, setDeviceType] = useState(isLocal() ? 2 : 1);
   const [kaspaAddr, setKaspaAddr] = useState();
   const [derivationPath, setDerivationPath] = useState();
 
   return (
     <div className="text-base">
-      <DeviceType onDeviceTypeChanged={deviceTypeChanged} />
+      <DeviceType chosenType={deviceType} onDeviceTypeChanged={deviceTypeChanged} />
       <AddressGenerator
         deviceType={deviceType}
         onClick={onUseAddressGenerator}

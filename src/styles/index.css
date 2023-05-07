@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#json-pretty {
+    color: red;
+    height: 30rem;
+}

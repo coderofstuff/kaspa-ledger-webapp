@@ -1,6 +1,7 @@
 import JSONPretty from "react-json-pretty";
 import { sendAmount } from "../app-to-ledger";
 import { useState } from "react";
+import CopyButton from "./CopyButton"
 
 const SendTransaction = (props) => {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,8 @@ const SendTransaction = (props) => {
           going to sign and submit the transaction to the Kaspa network.
         </p>
 
-        <div className="bg-[#333] rounded-2xl m-5 p-5">
+        <div className="flex flex-col bg-[#333] rounded-2xl m-5 p-5 overflow-hidden w-11/12">
+          <div className="ml-auto mr-10"><CopyButton text={txData} /></div>
           <JSONPretty
             mainStyle="line-height:1.3;color:#fff;background:#333;overflow:auto;"
             errorStyle="line-height:1.3;color:#66d9ef;background:#272822;overflow:auto;"
@@ -33,6 +35,7 @@ const SendTransaction = (props) => {
             valueStyle="color:#a6e22e;"
             booleanStyle="color:#ac81fe;"
             id="json-pretty"
+            className="overflow-y-auto"
             data={txData}
           ></JSONPretty>
         </div>
