@@ -2,8 +2,20 @@ import { useState } from "react";
 import { createTransaction } from "../app-to-ledger";
 
 const CreateTransaction = (props) => {
+  const [error, setError] = useState();
+  const [amountError, setAmountError] = useState(false);
+
   const onCreateTransactionClick = (e) => {
+    setError(null);
+    setAmountError(false)
+    e.preventDefault();
     const amount = e.target.amount.value;
+
+    if (amount <= 0) {
+      setAmountError(true)
+      return;
+    }
+
     const sendTo = e.target.toAddress.value;
 
     if (!amount || !sendTo) {
@@ -11,17 +23,19 @@ const CreateTransaction = (props) => {
     }
 
     const sompi = Math.round(Number(amount) * 100000000);
-    const tx = createTransaction(
-      sompi,
-      sendTo,
-      props.utxos,
-      props.derivationPath,
-      props.kaspaAddress
-    );
-    if (tx && props.onCreateTx) {
-      props.onCreateTx(tx);
+
+    try {
+      const tx = createTransaction(
+        sompi,
+        sendTo,
+        props.utxos,
+        props.derivationPath,
+        props.kaspaAddress
+      );
+      props.onCreateTx && !!tx && props.onCreateTx(tx);
+    } catch (err) {
+      setError("Amount too high.");
     }
-    e.preventDefault()
   };
 
   return (
@@ -49,7 +63,7 @@ const CreateTransaction = (props) => {
               type="text"
               name="amount"
               id="amount"
-              className="w-44 h-8 border-teal-300 border-b-2 bg-slate-600 px-3 py-4 focus:outline-none"
+              className={`w-44 h-8 border-teal-300 border-b-2 bg-slate-600 px-3 py-4 focus:outline-none ${amountError && "border-2 border-red-300"}`}
               placeholder="Amount"
             />
             <div className="text-white ml-2">KAS</div>
@@ -57,6 +71,7 @@ const CreateTransaction = (props) => {
           <button className="border-2 border-teal-300 rounded-md bg-slate-600 text-xs p-4 hover:bg-slate-500 active:bg-slate-500/80">
             Create transaction
           </button>
+          {!!error && <p className="text-red-400 text-xl">Error: {error}</p>}
         </div>
       </form>
     </div>

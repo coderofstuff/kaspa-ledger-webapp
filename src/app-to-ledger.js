@@ -143,7 +143,7 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
 
     if (!hasEnough) {
         // Show error we don't have enough KAS
-        return;
+        throw new Error('Amount too high.')
     }
 
     const path = derivationPath.split('/');

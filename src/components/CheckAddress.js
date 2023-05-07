@@ -18,7 +18,7 @@ const CheckAddress = (props) => {
       getAddressUtxos(props.kaspaAddress)
         .then((utxos) => {
           setUtxoCount(utxos.length);
-          props.setUtxos && props.setUtxos(utxos.map((utxo) => {
+          props.setUtxos && props.setUtxos((utxos || []).map((utxo) => {
             console.info('utxo', utxo);
             return {
               amount: Number(utxo.utxoEntry.amount),
