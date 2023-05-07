@@ -41,7 +41,7 @@ const SendTransaction = (props) => {
         </div>
 
         <button
-          className="border-2 border-teal-300 rounded-md bg-slate-600 flex flex-row justify-center items-center p-2 hover:bg-slate-500 active:bg-slate-500/80"
+          className="border-2 border-teal-300 rounded-md bg-slate-600 flex flex-row justify-center items-center p-4 hover:bg-slate-500 active:bg-slate-500/80"
           onClick={async () => {
             setLoading(true);
             sendAmount(props.transaction, props.deviceType)
@@ -59,7 +59,7 @@ const SendTransaction = (props) => {
         >
           {!!loading && (
             <img
-              className="w-12 h-12 m-2 text-teal-300 animate-spin"
+              className="w-8 h-8 text-teal-300 animate-spin"
               src="assets/spinner.svg"
             />
           )}

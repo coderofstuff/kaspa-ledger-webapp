@@ -33,6 +33,7 @@ const AddressVerifier = (props) => {
       className="bg-slate-600 mx-auto text-white p-10 flex flex-col min-w-[350px] min-h-[30rem] justify-center items-center"
     >
       <div className="text-teal-300 text-5xl py-3">VERIFY YOUR ADDRESS</div>
+      {!!props.derivationPath ? <>
       <p className="text-white">
         Your address for
         <span className="text-teal-300 font-mono">
@@ -86,7 +87,7 @@ const AddressVerifier = (props) => {
             <BsCheckCircleFill />
           </span>
         )}</> : <BsFillPatchQuestionFill className="text-yellow-300 text-4xl ml-5" />}
-      </div>
+      </div></> : <p>Generate an address first.</p>}
     </div>
   );
 };
