@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAddressBalance, getAddressUtxos } from "../kaspa-api-client";
+import CopyButton from "./CopyButton";
 
 const CheckAddress = (props) => {
   const [balance, setBalance] = useState(0);
@@ -40,7 +41,7 @@ const CheckAddress = (props) => {
       id="checkAddress"
     >
       <div className="text-5xl text-teal-300">ADDRESS OVERVIEW</div>
-
+{!!props.kaspaAddress ? <>
       <p className="mb-9">
         You now have a kaspa address with the following values:
       </p>
@@ -48,10 +49,11 @@ const CheckAddress = (props) => {
       <div className="flex flex-col">
         <div className="flex flex-row">
           <div className="w-32">Address:</div>
-          <div className="text-teal-400 text-sm font-mono">
+          <div className="text-teal-400 text-sm font-mono flex flex-row justify-center items-center">
             <a href={`https://explorer.kaspa.org/addresses/${props.kaspaAddress}`} target="_blank">
             {props.kaspaAddress}
             </a>
+            <CopyButton text={props.kaspaAddress} />
           </div>
         </div>
         <div className="flex flex-row">
@@ -63,6 +65,7 @@ const CheckAddress = (props) => {
           <div className="text-green-600">{utxoCount}</div>
         </div>
       </div>
+      </> : <p className="text-white text-xl">No address generated yet.</p>}
     </div>
   );
 };
