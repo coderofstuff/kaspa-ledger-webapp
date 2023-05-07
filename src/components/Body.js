@@ -34,12 +34,10 @@ const Body = () => {
   };
 
   const isLocal = () => {
-    const local = (
+    return (
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1"
-    )
-    console.log(local)
-    return local;
+    );
   };
 
   const newAddressReceived = (dervationPathGui, addr) => {
