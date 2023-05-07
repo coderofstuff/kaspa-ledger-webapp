@@ -15,7 +15,17 @@ const CheckAddress = (props) => {
 
       // set utxo count
       getAddressUtxos(props.kaspaAddress)
-        .then((v) => {setUtxoCount(v.length)})
+        .then((utxos) => {
+          setUtxoCount(utxos.length);
+          props.setUtxos && props.setUtxos(utxos.map((utxo) => {
+            console.info('utxo', utxo);
+            return {
+              amount: Number(utxo.utxoEntry.amount),
+              prevTxId: utxo.outpoint.transactionId,
+              outpointIndex: utxo.outpoint.index,
+            };
+          }));
+        })
         .catch((err) => console.log("error", err));
     };
 
