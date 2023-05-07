@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { verifyAddress } from "../app-to-ledger";
+import { BsFillPatchQuestionFill } from 'react-icons/bs'
+import { MdCancel } from 'react-icons/md'
+import { BsCheckCircleFill } from 'react-icons/bs'
 
 const AddressVerifier = (props) => {
+  const [verificationDone, setVerificationDone] = useState(false);
   const [verificationState, setVerificationState] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -17,6 +21,7 @@ const AddressVerifier = (props) => {
 
     verifyAddress(props.derivationPath).then((result) => {
       setLoading(false);
+      setVerificationDone(true)
       setVerificationState(result);
       props.onVerifyDone && props.onVerifyDone(result);
     });
@@ -68,18 +73,19 @@ const AddressVerifier = (props) => {
       )}
       <div className="text-white text-xl mt-6 flex flex-row items-center">
         Address verification status:
+        {!!verificationDone ? <>
         {loading ? (
           <img
             className="w-12 h-12 m-2 text-teal-300 animate-spin"
             src="assets/spinner.svg"
           />
         ) : !verificationState ? (
-          <span className="text-orange-400 text-5xl ml-5">✗</span>
+          <span className="text-orange-400 text-4xl ml-5"><MdCancel /></span>
         ) : (
-          <span className="text-green-500 text-5xl ml-5 animate-spin-fast">
-            ✔
+          <span className="text-green-500 text-4xl ml-5 animate-spin-fast">
+            <BsCheckCircleFill />
           </span>
-        )}
+        )}</> : <BsFillPatchQuestionFill className="text-yellow-300 text-4xl ml-5" />}
       </div>
     </div>
   );
