@@ -12,7 +12,8 @@ const isLocal = () => {
 
 const transportProps = {
     transport: null,
-    logListener: null
+    logListener: null,
+    isEmulator: true,
 };
 
 /**
@@ -53,12 +54,16 @@ function toScriptPublicKey(address) {
  * @returns {TransportWebHID}
  */
 export const getTransport = async (emulator=true) => {
+    // If not initialized or we're changing from emulator to non-emulator:
+    if (!transportProps.transport || transportProps.isEmulator != emulator) {
         if (emulator) {
             transportProps.transport = await HttpTransport(`http://${window.location.host}:${window.location.port}`).open(`/api/apdu`);
         } else {
             transportProps.transport = await TransportWebHID.create();
         }
         transportProps.logListener = listen(log => console.log(log));
+        transportProps.isEmulator = emulator;
+    }
     
     return transportProps.transport;
 };
@@ -101,8 +106,9 @@ export const generateLedgerAddress = async (derivationPath, deviceType) => {
     return addr.toString();
 }
 
-export const verifyAddress = async (derivationPath, verify) => {
-    const transport = await getTransport();
+export const verifyAddress = async (derivationPath, deviceType) => {
+    const isEmulator = deviceType === 2;
+    const transport = await getTransport(isEmulator);
     const kaspa = new Kaspa(transport);
     // Display the address on the Ledger device and ask to verify the address
     console.log("Verifying address for", derivationPath)

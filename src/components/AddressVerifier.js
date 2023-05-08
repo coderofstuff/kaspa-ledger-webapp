@@ -19,7 +19,7 @@ const AddressVerifier = (props) => {
     setVerificationState(false);
     props.onVerifyStart && props.onVerifyStart();
 
-    verifyAddress(props.derivationPath).then((result) => {
+    verifyAddress(props.derivationPath, props.deviceType).then((result) => {
       setLoading(false);
       setVerificationDone(true)
       setVerificationState(result);
