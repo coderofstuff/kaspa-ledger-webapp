@@ -44,7 +44,7 @@ const SendTransaction = (props) => {
           className="border-2 border-teal-300 rounded-md bg-slate-600 flex flex-row justify-center items-center p-4 hover:bg-slate-500 active:bg-slate-500/80"
           onClick={async () => {
             setLoading(true);
-            sendAmount(props.transaction, props.deviceType)
+            sendAmount(props.transaction, props.deviceType, props.kaspaAddress)
               .then((txId) => {
                 setLoading(false);
                 props.onTxSent && props.onTxSent(txId);

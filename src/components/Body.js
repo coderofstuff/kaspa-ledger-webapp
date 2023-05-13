@@ -88,6 +88,7 @@ const Body = () => {
         onCreateTx={txCreated}
       />
       <SendTransaction
+        kaspaAddress={kaspaAddr}
         transaction={transaction}
         deviceType={deviceType}
         onTxSent={txSent}

@@ -136,7 +136,7 @@ export const sendTransaction = async (signedTx) => {
     return data.transactionId;
 };
 
-export const createTransaction = (amount, sendTo, utxosInput, derivationPath, address) => {
+export const createTransaction = (amount, sendTo, utxosInput, derivationPath) => {
     console.info("Amount:", amount);
     console.info("Send to:", sendTo);
     console.info("UTXOs:", utxosInput);
@@ -178,7 +178,8 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
         // Send remainder back to self:
         outputs.push(new TransactionOutput({
             value: changeAmount,
-            scriptPublicKey: toScriptPublicKey(address),
+            addressType: 0,
+            addressIndex: 0,
         }));
     }
 
@@ -191,11 +192,15 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
     return tx;
 };
 
-export const sendAmount = async (tx, deviceType) => {
+export const sendAmount = async (tx, deviceType, address) => {
     const isEmulator = deviceType === 2;
     const transport = await getTransport(isEmulator)
     const kaspa = new Kaspa(transport);
     await kaspa.signTransaction(tx);
+
+    if (tx.outputs[1] && !tx.outputs[1].scriptPublicKey) {
+        tx.outputs[1].scriptPublicKey = toScriptPublicKey(address);
+    }
 
     // For now, just log it:
     console.info(JSON.stringify(tx.toApiJSON(), null, 4));

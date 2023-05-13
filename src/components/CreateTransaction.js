@@ -36,6 +36,7 @@ const CreateTransaction = (props) => {
     } catch (err) {
       setAmountError(true);
       setError("Amount too high.");
+      console.error(err);
     }
   };
 
