@@ -27,7 +27,7 @@
     "core-js": "^3.30.1",
     "crypto": "^1.0.1",
     "http-proxy-middleware": "^2.0.6",
-    "hw-app-kaspa": "github:coderofstuff/hw-app-kaspa#path-for-change-2",
+    "hw-app-kaspa": "github:coderofstuff/hw-app-kaspa#v0.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
