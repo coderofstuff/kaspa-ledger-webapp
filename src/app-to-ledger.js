@@ -186,6 +186,10 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
         version: 0,
         inputs,
         outputs,
+        // Make sure to send it back to myself
+        // Path here must match the script public key passed
+        changeAddressType: Number(path[3]),
+        changeAddressIndex: Number(path[4]),
     });
 
     return tx;
