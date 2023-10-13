@@ -128,6 +128,18 @@ export const verifyAddress = async (derivationPath, deviceType) => {
     )
 }
 
+export const signMessage = async (message, derivationPath, deviceType) => {
+    const isEmulator = deviceType === 2;
+    const transport = await getTransport(isEmulator);
+    const kaspa = new Kaspa(transport);
+
+    const path = derivationPath.split('/');
+    const addressType = Number(path[3]);
+    const addressIndex = Number(path[4]);
+
+    return await kaspa.signMessage(message, addressType, addressIndex);
+}
+
 export const sendTransaction = async (signedTx) => {
     const txJson = signedTx.toApiJSON();
 

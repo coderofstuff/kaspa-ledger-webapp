@@ -7,6 +7,7 @@ import CreateTransaction from "./CreateTransaction";
 import SendTransaction from "./SendTransaction";
 import TxSent from "./TxSent";
 import Footer from "./Footer";
+import MessageSigning from "./MessageSigning";
 
 const Body = () => {
   const [transaction, setTransaction] = useState();
@@ -93,6 +94,10 @@ const Body = () => {
         onTxSent={txSent}
       />
       <TxSent txId={txId}/>
+      <MessageSigning
+        derivationPath={derivationPath}
+        deviceType={deviceType}
+      />
       <Footer />
     </div>
   );
