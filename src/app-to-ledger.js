@@ -1,6 +1,7 @@
 import 'core-js/actual';
 import { listen } from "@ledgerhq/logs";
-import { Kaspa, TransactionInput, TransactionOutput, Transaction } from "hw-app-kaspa";
+import { TransactionInput, TransactionOutput, Transaction } from "hw-app-kaspa";
+import Kaspa from "hw-app-kaspa";
 import axios from "axios";
 import { PublicKey, Address, Script } from "@kaspa/core-lib";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
@@ -98,7 +99,7 @@ export const generateLedgerAddress = async (derivationPath, deviceType) => {
     const isEmulator = deviceType === 2;
     const transport = await getTransport(isEmulator);
     const kaspa = new Kaspa(transport);
-    const { address } = await kaspa.getAddress(derivationPath, false);
+    const address = await kaspa.getPublicKey(derivationPath, false);
     const subAdd = address.subarray(1, 66);
     console.log("SubAdd", subAdd)
     const pubkey = PublicKey.fromDER(Buffer.from(subAdd));
@@ -113,8 +114,8 @@ export const verifyAddress = async (derivationPath, deviceType) => {
     // Display the address on the Ledger device and ask to verify the address
     console.log("Verifying address for", derivationPath)
 
-    return await kaspa.getAddress(derivationPath, true).then(
-        (address) => {
+    return await kaspa.getPublicKey(derivationPath, true).then(
+        () => {
             console.log("Received address from Ledger device")
             return true
         }
