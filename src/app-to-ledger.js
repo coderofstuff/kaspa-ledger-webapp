@@ -135,10 +135,11 @@ export const signMessage = async (message, derivationPath, deviceType) => {
     const kaspa = new Kaspa(transport);
 
     const path = derivationPath.split('/');
+    const account = 0x80000000 + Number(path[2].substring(0, path[2].length - 1));
     const addressType = Number(path[3]);
     const addressIndex = Number(path[4]);
 
-    return await kaspa.signMessage(message, addressType, addressIndex);
+    return await kaspa.signMessage(message, addressType, addressIndex, account);
 }
 
 export const sendTransaction = async (signedTx) => {
@@ -201,6 +202,7 @@ export const createTransaction = (amount, sendTo, utxosInput, derivationPath, ad
         outputs,
         // Make sure to send it back to myself
         // Path here must match the script public key passed
+        account: 0x80000000 + Number(path[2].substring(0, path[2].length - 1)),
         changeAddressType: Number(path[3]),
         changeAddressIndex: Number(path[4]),
     });
